@@ -102,7 +102,7 @@
 
 ## 参考
 
-[基于人工智能标记语言 (AIML)和开放域问答(WebQA)的深度智能对话模型](https://github.com/zhangbincheng1997/chatbot-aiml-webqa)
-[中文相似度匹配算法](https://blog.csdn.net/chndata/article/details/41114771)
-[wenyangchou/SimilarCharactor](https://github.com/wenyangchou/SimilarCharactor)
+[基于人工智能标记语言 (AIML)和开放域问答(WebQA)的深度智能对话模型](https://github.com/zhangbincheng1997/chatbot-aiml-webqa)<br>
+[中文相似度匹配算法](https://blog.csdn.net/chndata/article/details/41114771)<br>
+[wenyangchou/SimilarCharactor](https://github.com/wenyangchou/SimilarCharactor)<br>
 [敏感词过滤的几种实现+某1w词敏感词库](https://github.com/observerss/textfilter)
