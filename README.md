@@ -98,7 +98,7 @@
    
 **效果展示：**
 
-![效果1](http://blog.520004.xyz/wp-content/uploads/2022/02/1644662900-1.png)
+![效果1](https://github.com/aoguai/chatbot_aiml_task_demo/blob/main/images/1.png)
 
 ## 参考
 
