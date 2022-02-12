@@ -7,6 +7,7 @@ import shelve
 
 import aiml
 import jieba
+import os
 
 jieba.setLogLevel(jieba.logging.INFO)  # 关闭分词日志
 
@@ -108,7 +109,15 @@ class ChatBot:
                 return self.mybot.respond('无答案')
 
     def save(self, question, answer):
+        # 删除上次学习缓存
+        if os.path.exists("resources/shelve.db.dir"):
+            os.remove("resources/shelve.db.dir")
+        if os.path.exists("resources/shelve.db.dat"):
+            os.remove("resources/shelve.db.dat")
+        if os.path.exists("resources/shelve.db.bak"):
+            os.remove("resources/shelve.db.bak")
         db = shelve.open(self.shelve_file, 'c', writeback=True)
+        print(question, answer)
         db[question.replace('\n', '').replace('\r', '').replace('   ', '')] = answer.replace('\n', '').replace('\r', '').replace('   ', '')
         db.sync()
         rules = []
@@ -116,7 +125,7 @@ class ChatBot:
             rules.append(self.category_template.format(pattern=r, answer=db[r]))
         with open(self.save_file, 'w',encoding='utf-8') as fp:
             fp.write(self.template.format(rule='\n'.join(rules)))
-
+            
     def forget(self):
         import os
         os.remove(self.save_file) if os.path.exists(self.save_file) else None
