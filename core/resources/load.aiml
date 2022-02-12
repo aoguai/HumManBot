@@ -1,0 +1,44 @@
+<aiml version="1.0" encoding="UTF-8">
+	<category>
+		<pattern>LOAD AIML B</pattern>
+		<template>
+			<learn>resources/Book.aiml</learn>
+			<learn>resources/Complain.aiml</learn>
+			<learn>resources/Computer.aiml</learn>
+			<learn>resources/Constellation.aiml</learn>
+			<learn>resources/Discuss.aiml</learn>
+			<learn>resources/Encourage.aiml</learn>
+			<learn>resources/External.aiml</learn>
+			<learn>resources/Film.aiml</learn>
+			<learn>resources/Food.aiml</learn>
+			<learn>resources/Game.aiml</learn>
+			<learn>resources/Greeting.aiml</learn>
+			<learn>resources/Healthy.aiml</learn>
+			<learn>resources/Inherence.aiml</learn>
+			<learn>resources/Internet.aiml</learn>
+			<learn>resources/Job.aiml</learn>
+			<learn>resources/Joke.aiml</learn>
+			<learn>resources/Life.aiml</learn>
+			<learn>resources/MarkResponse.aiml</learn>
+			<learn>resources/Master.aiml</learn>
+			<learn>resources/Music.aiml</learn>
+			<learn>resources/MyInfo.aiml</learn>
+			<learn>resources/Photography.aiml</learn>
+			<learn>resources/Plan.aiml</learn>
+			<learn>resources/Praise.aiml</learn>
+			<learn>resources/Rude.aiml</learn>
+			<learn>resources/Sentiment .aiml</learn>
+			<learn>resources/Sex.aiml</learn>
+			<learn>resources/SmallWord.aiml</learn>
+			<learn>resources/Study.aiml</learn>
+			<learn>resources/Travel.aiml</learn>
+			<learn>resources/basic.aiml</learn>
+			<learn>resources/common.aiml</learn>
+			<learn>resources/gossip.aiml</learn>
+			<learn>resources/learn.aiml</learn>
+			<learn>resources/load.aiml</learn>
+			<learn>resources/main.aiml</learn>
+			<learn>resources/save.aiml</learn>
+		</template>
+	</category>
+</aiml>
