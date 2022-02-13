@@ -80,32 +80,33 @@ class ChatBot:
             ########
             result = self.mybot.respond(''.join(jieba.cut(message)))
             # 匹配模式
-            if result == "":
-                return message
-            if result[0] != '#':
-                return result
-            # 搜索模式
-            elif result.find('#NONE#') != -1:
-                #########
-                # WebQA #
-                #########
-                ans = crawl.search(message)
-                if ans != '':
-                    return ans
+            try:
+                if result[0] != '#':
+                    return result
+                # 搜索模式
+                elif result.find('#NONE#') != -1:
+                    #########
+                    # WebQA #
+                    #########
+                    ans = crawl.search(message)
+                    if ans != '':
+                        return ans.encode('utf-8')
+                    else:
+                        ###############
+                        # Deeplearing #
+                        ###############
+                        ans = deep.bot_reply(message,0000000000)
+                        return ans.encode('utf-8')
+                # 学习模式
+                elif result.find('#LEARN#') != -1:
+                    question = result[8:]
+                    answer = message
+                    self.save(question, answer)
+                    return self.mybot.respond('已学习')
+                # MAY BE BUG
                 else:
-                    ###############
-                    # Deeplearing #
-                    ###############
-                    ans = deep.bot_reply(message,0000000000)
-                    return ans
-            # 学习模式
-            elif result.find('#LEARN#') != -1:
-                question = result[8:]
-                answer = message
-                self.save(question, answer)
-                return self.mybot.respond('已学习')
-            # MAY BE BUG
-            else:
+                    return self.mybot.respond('无答案')
+            except:
                 return self.mybot.respond('无答案')
 
     def save(self, question, answer):
@@ -125,7 +126,7 @@ class ChatBot:
             rules.append(self.category_template.format(pattern=r, answer=db[r]))
         with open(self.save_file, 'w',encoding='utf-8') as fp:
             fp.write(self.template.format(rule='\n'.join(rules)))
-            
+
     def forget(self):
         import os
         os.remove(self.save_file) if os.path.exists(self.save_file) else None
@@ -137,9 +138,8 @@ if __name__ == '__main__':
     bot = ChatBot()
     while True:
         message = input('ME > ')
+        re_text = bot.response(message)
         try:
-            re_text = bot.response(message).decode('utf-8')
             print('AI > ' + re_text)
         except:
-            re_text = bot.response(message)
-            print('AI > ' + re_text)
+            print('AI > ' + re_text.decode('utf-8'))
