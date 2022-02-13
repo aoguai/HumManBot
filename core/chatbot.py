@@ -97,7 +97,7 @@ class ChatBot:
                     # Deeplearing #
                     ###############
                     ans = deep.bot_reply(message,0000000000)
-                    return ans.encode('utf-8')
+                    return ans
             # 学习模式
             elif result.find('#LEARN#') != -1:
                 question = result[8:]
