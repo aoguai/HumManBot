@@ -91,7 +91,7 @@ class ChatBot:
                 #########
                 ans = crawl.search(message)
                 if ans != '':
-                    return ans.encode('utf-8')
+                    return ans
                 else:
                     ###############
                     # Deeplearing #
