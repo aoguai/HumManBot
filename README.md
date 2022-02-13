@@ -112,6 +112,9 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
 ![效果1](https://github.com/aoguai/chatbot_aiml_task_demo/blob/main/images/1.png)
 ![效果2](https://github.com/aoguai/chatbot_aiml_task_demo/blob/main/images/2.png)
 
+## 使用教程
+[WIKI](https://github.com/aoguai/HumManBot/wiki)
+
 ## 参考
 
 [基于人工智能标记语言 (AIML)和开放域问答(WebQA)的深度智能对话模型](https://github.com/zhangbincheng1997/chatbot-aiml-webqa)
