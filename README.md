@@ -63,7 +63,7 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
   
  其中：
  
-  **chatbot.py** 是主程序
+  **chatbot.py** 是HumManBot的主要函数与类
   
   **config.cfg** 是各种路径的配置文件
   
