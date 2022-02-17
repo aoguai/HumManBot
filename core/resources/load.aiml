@@ -2,43 +2,43 @@
 	<category>
 		<pattern>LOAD AIML B</pattern>
 		<template>
-			<learn>resources/Book.aiml</learn>
-			<learn>resources/Complain.aiml</learn>
-			<learn>resources/Computer.aiml</learn>
-			<learn>resources/Constellation.aiml</learn>
-			<learn>resources/Discuss.aiml</learn>
-			<learn>resources/Encourage.aiml</learn>
-			<learn>resources/External.aiml</learn>
-			<learn>resources/Film.aiml</learn>
-			<learn>resources/Food.aiml</learn>
-			<learn>resources/Game.aiml</learn>
-			<learn>resources/Greeting.aiml</learn>
-			<learn>resources/Healthy.aiml</learn>
-			<learn>resources/Inherence.aiml</learn>
-			<learn>resources/Internet.aiml</learn>
-			<learn>resources/Job.aiml</learn>
-			<learn>resources/Joke.aiml</learn>
-			<learn>resources/Life.aiml</learn>
-			<learn>resources/MarkResponse.aiml</learn>
-			<learn>resources/Master.aiml</learn>
-			<learn>resources/Music.aiml</learn>
-			<learn>resources/MyInfo.aiml</learn>
-			<learn>resources/Photography.aiml</learn>
-			<learn>resources/Plan.aiml</learn>
-			<learn>resources/Praise.aiml</learn>
-			<learn>resources/Rude.aiml</learn>
-			<learn>resources/Sentiment .aiml</learn>
-			<learn>resources/Sex.aiml</learn>
-			<learn>resources/SmallWord.aiml</learn>
-			<learn>resources/Study.aiml</learn>
-			<learn>resources/Travel.aiml</learn>
-			<learn>resources/basic.aiml</learn>
-			<learn>resources/common.aiml</learn>
-			<learn>resources/gossip.aiml</learn>
-			<learn>resources/learn.aiml</learn>
-			<learn>resources/load.aiml</learn>
-			<learn>resources/main.aiml</learn>
-			<learn>resources/save.aiml</learn>
+			<learn>core/resources/Book.aiml</learn>
+			<learn>core/resources/Complain.aiml</learn>
+			<learn>core/resources/Computer.aiml</learn>
+			<learn>core/resources/Constellation.aiml</learn>
+			<learn>core/resources/Discuss.aiml</learn>
+			<learn>core/resources/Encourage.aiml</learn>
+			<learn>core/resources/External.aiml</learn>
+			<learn>core/resources/Film.aiml</learn>
+			<learn>core/resources/Food.aiml</learn>
+			<learn>core/resources/Game.aiml</learn>
+			<learn>core/resources/Greeting.aiml</learn>
+			<learn>core/resources/Healthy.aiml</learn>
+			<learn>core/resources/Inherence.aiml</learn>
+			<learn>core/resources/Internet.aiml</learn>
+			<learn>core/resources/Job.aiml</learn>
+			<learn>core/resources/Joke.aiml</learn>
+			<learn>core/resources/Life.aiml</learn>
+			<learn>core/resources/MarkResponse.aiml</learn>
+			<learn>core/resources/Master.aiml</learn>
+			<learn>core/resources/Music.aiml</learn>
+			<learn>core/resources/MyInfo.aiml</learn>
+			<learn>core/resources/Photography.aiml</learn>
+			<learn>core/resources/Plan.aiml</learn>
+			<learn>core/resources/Praise.aiml</learn>
+			<learn>core/resources/Rude.aiml</learn>
+			<learn>core/resources/Sentiment .aiml</learn>
+			<learn>core/resources/Sex.aiml</learn>
+			<learn>core/resources/SmallWord.aiml</learn>
+			<learn>core/resources/Study.aiml</learn>
+			<learn>core/resources/Travel.aiml</learn>
+			<learn>core/resources/basic.aiml</learn>
+			<learn>core/resources/common.aiml</learn>
+			<learn>core/resources/gossip.aiml</learn>
+			<learn>core/resources/learn.aiml</learn>
+			<learn>core/resources/load.aiml</learn>
+			<learn>core/resources/main.aiml</learn>
+			<learn>core/resources/save.aiml</learn>
 		</template>
 	</category>
 </aiml>
