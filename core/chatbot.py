@@ -11,12 +11,12 @@ import os
 
 jieba.setLogLevel(jieba.logging.INFO)  # 关闭分词日志
 
-from crawler import crawl
-from deeplearning import deep
-from tool import filter
+from .crawler import crawl
+from .deeplearning import deep
+from .tool import filter
 
 
-class ChatBot:
+class HumManBot:
     """
         基于 AIML 和 WebQA 的智能对话模型
         1. AIML 人工智能标记语言
@@ -28,7 +28,7 @@ class ChatBot:
         print bot.response('你好')
     """
 
-    def __init__(self, config_file='config.cfg'):
+    def __init__(self, config_file='./core/config.cfg'):
         config = configparser.ConfigParser()
         config.read(config_file)
         self.filter_file = config.get('resource', 'filter_file')  # 敏感词库路径
@@ -90,13 +90,13 @@ class ChatBot:
                     #########
                     ans = crawl.search(message)
                     if ans != '':
-                        return ans.encode('utf-8')
+                        return ans
                     else:
                         ###############
                         # Deeplearing #
                         ###############
-                        ans = deep.bot_reply(message,0000000000)
-                        return ans.encode('utf-8')
+                        ans = deep.bot_reply(message, 0000000000)
+                        return ans
                 # 学习模式
                 elif result.find('#LEARN#') != -1:
                     question = result[8:]
@@ -119,12 +119,14 @@ class ChatBot:
             os.remove("resources/shelve.db.bak")
         db = shelve.open(self.shelve_file, 'c', writeback=True)
         print(question, answer)
-        db[question.replace('\n', '').replace('\r', '').replace('   ', '')] = answer.replace('\n', '').replace('\r', '').replace('   ', '')
+        db[question.replace('\n', '').replace('\r', '').replace('   ', '')] = answer.replace('\n', '').replace('\r',
+                                                                                                               '').replace(
+            '   ', '')
         db.sync()
         rules = []
         for r in db:
             rules.append(self.category_template.format(pattern=r, answer=db[r]))
-        with open(self.save_file, 'w',encoding='utf-8') as fp:
+        with open(self.save_file, 'w', encoding='utf-8') as fp:
             fp.write(self.template.format(rule='\n'.join(rules)))
 
     def forget(self):
@@ -132,14 +134,3 @@ class ChatBot:
         os.remove(self.save_file) if os.path.exists(self.save_file) else None
         os.remove(self.shelve_file) if os.path.exists(self.shelve_file) else None
         self.mybot.bootstrap(learnFiles=self.load_file, commands='load aiml b')
-
-
-if __name__ == '__main__':
-    bot = ChatBot()
-    while True:
-        message = input('ME > ')
-        re_text = bot.response(message)
-        try:
-            print('AI > ' + re_text)
-        except:
-            print('AI > ' + re_text.decode('utf-8'))
