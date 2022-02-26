@@ -1,10 +1,10 @@
 """查天气 天气+地名"""
-import time, random, os, demjson, httpx
+import os, demjson, httpx
 
 
 def get_weather(Content):
-    text = Content  # 替换前2个字为空
-    cacheFileName = './crawler/stationID.json'
+    text = Content
+    cacheFileName = './core/crawler/stationID.json'
     if not os.path.isfile(cacheFileName):
         return "城市ID获取失败，换个城市试试吧"
     fo = open(cacheFileName, "r",encoding='utf-8')
