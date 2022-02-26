@@ -2,15 +2,14 @@
 # -*- coding: UTF-8 -*-
 
 import configparser
-
+import os
 import shelve
 
-import aiml
 import jieba
-import os
 
 jieba.setLogLevel(jieba.logging.INFO)  # 关闭分词日志
 
+from .py3Aiml_Chinese.Kernel import Kernel
 from .crawler import crawl
 from .deeplearning import deep
 from .tool import filter
@@ -45,7 +44,7 @@ class HumManBot:
         self.gfw.parse(self.filter_file)
 
         # 初始化知识库
-        self.mybot = aiml.Kernel()
+        self.mybot = Kernel()
         self.mybot.bootstrap(learnFiles=self.load_file, commands='load aiml b')
 
         # 初始化学习库
