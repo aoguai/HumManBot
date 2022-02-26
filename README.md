@@ -18,6 +18,7 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
 
 ### 特点
 + AIML知识库更多（共35个）
++ AIML功能采用[py3Aiml_Chinese](https://github.com/yaleimeng/py3Aiml_Chinese),可正确解析带中文pattern和模板的aiml文件
 + [敏感词库](https://github.com/observerss/textfilter)更广（共1.5W个），同时敏感词判断更合理
 + 新增NLP功能，用于处理文本相似度。
   + 针对文本相似度使用了：[音形码算法](https://github.com/wenyangchou/SimilarCharactor)+余弦相似度算法
@@ -27,8 +28,9 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
 首先下载解压你会得到一个这样一个目录结构
 
 #### 目录结构
-  >chatbot_aiml_task_demo<br>
+>HumManBot<br/>
 ├─ __init__.py<br/>
+├─ bot.py<br/>
 └─ core<br/>
        ├─ __init__.py<br/>
        ├─ chatbot.py<br/>
@@ -41,39 +43,42 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
        │    └─ weather.py<br/>
        ├─ deeplearning<br/>
        │    ├─ NLP.py<br/>
-       │    ├─  .......<br/>
+       │    ├─  ......<br/>
        │    ├─ SimilarCharactor<br/>
        │    ├─ __init__.py<br/>
        │    └─ deep.py<br/>
        ├─ log<br/>
        │    ├─ .gitkeep<br/>
-       │    └─ .......<br/>
+       │    └─ ...... <br/>
+       ├─ py3Aiml_Chinese<br/>
+       │    ├─ AimlParser.py<br/>
+       │    ├─ DefaultSubs.py<br/>
+       │    ├─ Example<br/>
+       │    ├─ Kernel.py<br/>
+       │    └─ ......<br/>
        ├─ resources<br/>
        │    ├─ Book.aiml<br/>
-       │    ├─ .......<br/>
-       │    ├─ save.aiml<br/>
-       │    ├─ load.aiml<br/>
-       │    ├─ main.aiml<br/>
-       │    ├─ sensitive.txt<br/>
-       │    ├─ .......<br/>
-       │    └─  .......<br/>
+       │    ├─ ......<br/>
+       │    └─ sensitive.txt<br/>
        └─ tool<br/>
               ├─ __init__.py<br/>
               └─ filter.py<br/>
   
  其中：
  
-  **chatbot.py** 是HumManBot的主要函数与类
+  **chatbot.py** ：HumManBot的主要函数与类
   
-  **config.cfg** 是各种路径的配置文件
+  **py3Aiml_Chinese 文件夹** ： [py3Aiml_Chinese](https://github.com/yaleimeng/py3Aiml_Chinese)相关文件
   
- **tool文件夹** 下是存放的是用于**敏感词过滤**使用的**filter.py**文件
+  **config.cfg** ：各种路径的配置文件
+  
+ **tool文件夹** ：存放的是用于**敏感词过滤**使用的**filter.py**文件
  
- **resources文件夹** 建议存放AIML知识库和敏感词库
+ **resources文件夹** ：建议存放AIML知识库和敏感词库
  
- **deeplearning文件夹** 存放的是NLP主要代码
+ **deeplearning文件夹** ：存放的是NLP主要代码
  
-  **crawler文件夹** 存放的是任务型对话系统(Task)主要代码
+  **crawler文件夹** ：存放的是任务型对话系统(Task)主要代码
   
 ### 程序处理流程
 1. 预处理<br/>
@@ -118,6 +123,8 @@ Deep intelligent dialogue robot based on artificial intelligence markup language
 ## 参考
 
 [基于人工智能标记语言 (AIML)和开放域问答(WebQA)的深度智能对话模型](https://github.com/zhangbincheng1997/chatbot-aiml-webqa)
+
+[py3Aiml_Chinese](https://github.com/yaleimeng/py3Aiml_Chinese)
 
 [中文相似度匹配算法](https://blog.csdn.net/chndata/article/details/41114771)
 
