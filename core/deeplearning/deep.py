@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-
 from .NLP import *
 
 import httpx, re, time
-
+import http.client
+import json
+import demjson
 
 
 # 过滤特殊字符，保留中文、英文和数字
@@ -17,6 +18,7 @@ def random_z():
     t = time.time()
     time_s = str(round(t * 1000000))
     return int(time_s[::-1][1:6])
+
 
 # mcenjoy机器人回复 https://mcenjoy.cn/api/v1/chat?s=
 def mcenjoy_reply(strs):
@@ -38,26 +40,32 @@ def mcenjoy_reply(strs):
     return txt
 
 
-# 茉莉机器人回复 http://i.itpk.cn/api.php
-def lili_reply(strs):
-    # start_time = time.time()
-    url = "http://i.itpk.cn/api.php"
-    params = {
-        "question": strs,
-        "limit": "8",
-        "api_key": "",
-        "api_secret": "",
-    }
+# 茉莉机器人回复 https://mlyai.com/
+def lili_reply(strs, fromuin, to):
     try:
-        res = httpx.get(url, params=params).text
+        conn = http.client.HTTPSConnection("api.mlyai.com")
+        payload = json.dumps({
+            "content": strs,
+            "type": 2,
+            "from": str(fromuin),
+            "to": str(to)
+        })
+        headers = {
+            'Api-Key': '8ixhf80xjenu41r5',
+            'Api-Secret': 'zfsfanjp',
+            'Content-Type': 'application/json'
+        }
+        conn.request("POST", "/reply", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
         # print("茉莉：",res)
-        txt = filter_spec_chars(res.replace("[cqname]", "").replace("[name]", "我"))
-        # elapse_time = time.time() - start_time
-        # print("mcenjoy耗时："+str(elapse_time))
+        txt = demjson.decode(data.decode("utf-8").replace("[cqname]", "").replace("[name]", "我"))
+        # elapse_time = time() - start_time
+        # print("茉莉耗时："+str(elapse_time))
     except Exception as e:
         print(f"茉莉机器人回复请求失败\r\n {e}")
         return "我不明白"
-    return txt
+    return txt['data'][0]['content']
 
 
 # 青云客回复 www.qingyunke.com
@@ -90,7 +98,7 @@ def ruyi_reply(user_id, strs):
     url = "http://api.ruyi.ai/v1/message"
     params = {
         "q": strs,
-        "app_key": "",
+        "app_key": "0d693730-5577-485a-9b3a-30dbe44c8639",
         "user_id": user_id
     }
     try:
@@ -106,18 +114,18 @@ def ruyi_reply(user_id, strs):
     return txt
 
 
-#思知机器人回复 https://api.ownthink.com/
+# 思知机器人回复 https://api.ownthink.com/
 def ownthink_reply(user_id, strs):
     # start_time = time.time()
     url = "https://api.ownthink.com/bot"
     params = {
         "spoken": strs,
-        "appid": "",
+        "appid": "c7da135f410589fa6f45dd7d9b807add",
         "userid": str(user_id)
     }
     try:
         res = httpx.get(url, params=params).json()
-        #print("思知：",res)
+        # print("思知：",res)
         a = res['data']['info']['text']
         txt = filter_spec_chars(a.replace("小思", "猪猪侠"))
         # elapse_time = time.time() - start_time
@@ -129,17 +137,17 @@ def ownthink_reply(user_id, strs):
 
 
 # 计算文本相似度，生成最优回复
-def bot_reply(strs,FromUserId=0000000000):
+def bot_reply(strs, FromUserId=0000000000):
     if filter_spec_chars(strs) != "":
         # print("strs:"..strs)
         txt = ""
         # 分别生成四个接口回复
-        lili_txt = lili_reply(strs)
+        lili_txt = lili_reply(strs, FromUserId, 0000000000)
         qingyunke_txt = qingyunke_reply(strs)
         ruyi_txt = ruyi_reply(FromUserId, strs)
         ownthink_txt = ownthink_reply(FromUserId, strs)
         mcenjoy_txt = mcenjoy_reply(strs)
-        # print("机器人回复#->%s", lili_txt+"丨"+qingyunke_txt+"丨"+ownthink_txt+"丨"+ruyi_txt+"丨"+mcenjoy_txt)
+        print("机器人回复#->%s", lili_txt + "丨" + qingyunke_txt + "丨" + ownthink_txt + "丨" + ruyi_txt + "丨" + mcenjoy_txt)
 
         # 分别计算四个接口的文本相似度
         lili_dp = comprehensive_similar(filter_spec_chars(strs), filter_spec_chars(lili_txt))
@@ -152,15 +160,15 @@ def bot_reply(strs,FromUserId=0000000000):
         dp_list = [lili_dp, ruyi_dp, qingyunke_dp, ownthink_dp, mcenjoy_dp]
         maxn = max(dp_list)
         # print("机器人回复dp#->%s","莉莉："..lili_dp.."丨青云客："..qingyunke_dp.."丨ownthink:"..ownthink_dp.."丨如意："..ruyi_dp.."丨mcenjoy：".. mcenjoy_dp)
-        if (maxn == lili_dp):
+        if maxn == lili_dp:
             return lili_txt
-        elif (maxn == qingyunke_dp):
+        elif maxn == qingyunke_dp:
             return qingyunke_txt
-        elif (maxn == ownthink_dp):
+        elif maxn == ownthink_dp:
             return ownthink_txt
-        elif (maxn == ruyi_dp):
+        elif maxn == ruyi_dp:
             return ruyi_txt
-        elif (maxn == mcenjoy_dp):
+        elif maxn == mcenjoy_dp:
             return mcenjoy_txt
         else:
             return lili_txt
