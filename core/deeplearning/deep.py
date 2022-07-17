@@ -51,8 +51,8 @@ def lili_reply(strs, fromuin, to):
             "to": str(to)
         })
         headers = {
-            'Api-Key': '8ixhf80xjenu41r5',
-            'Api-Secret': 'zfsfanjp',
+            'Api-Key': '',
+            'Api-Secret': '',
             'Content-Type': 'application/json'
         }
         conn.request("POST", "/reply", payload, headers)
