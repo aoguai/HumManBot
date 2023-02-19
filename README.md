@@ -15,6 +15,9 @@ Deep Chinese intelligent dialogue robot based on GPT2 model of Chinese chat, art
 特此开源供各位参考学习
 
 ## 源码与介绍
+本人开发运行环境：
+
+python==3.8 torch==1.13.1+cu117 transformers==4.26.1
 
 ### 实现功能
 + 知识库匹配（AIML）回答问题
