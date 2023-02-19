@@ -1,5 +1,7 @@
 """查天气 天气+地名"""
-import os, demjson, httpx
+import json
+import httpx
+import os
 
 
 def get_weather(Content):
@@ -7,10 +9,9 @@ def get_weather(Content):
     cacheFileName = './core/crawler/stationID.json'
     if not os.path.isfile(cacheFileName):
         return "城市ID获取失败，换个城市试试吧"
-    fo = open(cacheFileName, "r",encoding='utf-8')
-    ID_Data = demjson.decode(fo.read())
-    fo.close()
-    if ID_Data[text]:
+    with open(cacheFileName, "r", encoding='utf-8') as fo:
+        ID_Data = json.load(fo)
+    if text in ID_Data:
         cityID = ID_Data[text]
         return getWeather(cityID)
     else:
