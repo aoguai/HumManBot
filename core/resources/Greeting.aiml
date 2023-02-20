@@ -71,14 +71,14 @@
 </category>
 
 
-<!-- 这里丁丁的匹配又问题，看看其他地方有没有丁丁的匹配 -->
-<category><pattern>*是丁丁*</pattern><template><srai>丁丁是谁</srai></template></category>
+<!-- 这里猪猪侠的匹配又问题，看看其他地方有没有猪猪侠的匹配 -->
+<category><pattern>*是猪猪侠*</pattern><template><srai>猪猪侠是谁</srai></template></category>
 <category>
-	<pattern>*丁丁是*</pattern>
+	<pattern>*猪猪侠是*</pattern>
 	<template>
 		<think><set name="star"><star index="2"/></set></think>
     	<condition name="star">
-      		<li value="美女">谢谢</li>
+      		<li value="帅哥">谢谢</li>
       		<li value="呀"><srai>你好</srai></li>
       		<li>wo ya </li>
       	</condition>
@@ -88,19 +88,19 @@
 
 
 <category>
-  <pattern>丁丁是谁</pattern>
+  <pattern>猪猪侠是谁</pattern>
   <template>
   	<random>
-  		<li>我就是丁丁啦~~o(^_^)o </li>
-  		<li>这么一位大美女在你眼前你都不知道呀~</li>
-  		<li>呐，这是我的名片，我就是丁丁啦，以后有什么问题可以问我哦！</li>
-  		<li>你猜？丁丁就是我啦，呵呵！</li>
+  		<li>我就是猪猪侠啦~~o(^_^)o </li>
+  		<li>这么一位大帅哥在你眼前你都不知道呀~</li>
+  		<li>呐，这是我的名片，我就是猪猪侠啦，以后有什么问题可以问我哦！</li>
+  		<li>你猜？猪猪侠就是我啦，呵呵！</li>
   	</random>
   </template>
 </category>
 
 <category>
-  <pattern>*丁丁*</pattern>
+  <pattern>*猪猪侠*</pattern>
   <template>
   	<random>
   		<li>额....刚睡着就被吵醒了。有事吗？</li>
@@ -362,7 +362,7 @@
 
  <category>
 <pattern>你叫什么*</pattern> 
-<template>我叫丁丁啊</template> 
+<template>我叫猪猪侠啊</template> 
 </category> 
 
 <category>

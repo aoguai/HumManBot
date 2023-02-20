@@ -17,8 +17,8 @@ def isChinese(c):
         (0x31C0, 0x31EF)]
     return any(s <= ord(c) <= e for s, e in r)
 
-def splitChinese(s):
 
+def splitChinese(s):
     result = []
     for c in s:
         if isChinese(c):
@@ -26,4 +26,4 @@ def splitChinese(s):
         else:
             result.append(c)
     ret = ''.join(result)
-    return ret.split()        #字符串默认的分割就是按空格分词，返回list
+    return ret.split()  # 字符串默认的分割就是按空格分词，返回list

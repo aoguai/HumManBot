@@ -1,4 +1,5 @@
 import configparser
+import os
 
 import jieba
 from .crawler import crawl
@@ -14,7 +15,7 @@ class ChatBot:
         基于 GPT-2 和 WebQA 的智能对话模型
     """
 
-    def __init__(self, config_file='./core/config.cfg'):
+    def __init__(self, config_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.cfg')):
         config = configparser.ConfigParser()
         config.read(config_file)
         self.load_file = config.get('resource', 'load_file')  # AIML内核指定的文件路径
@@ -49,36 +50,35 @@ class ChatBot:
             return self.mybot.respond('MIN')
 
         # 过滤敏感词
-        message_list = list(jieba.cut(message))
+        message_list = jieba.lcut(message)
         message_new = ""
         for i in message_list:
             if self.gfw.filter(i, "*").count("*") == len(i):
                 message_new = message_new + self.gfw.filter(i, "*").decode()
             else:
                 message_new = message_new + i
-        if message_new.find("*") != -1:
+        if '*' in message_new:
             return self.mybot.respond('过滤')
 
         # 结束聊天
-        if message == 'exit' or message == 'quit':
+        if message in ('exit', 'quit'):
             return self.mybot.respond('再见')
         # 开始聊天
         else:
             ########
             # AIML #
             ########
-            result = self.mybot.respond(''.join(jieba.cut(message)))
+            result = self.mybot.respond(''.join(message_list))
             # 匹配模式
-            # try:
             if result[0] != '#':
                 return result
             # 搜索模式
-            elif result.find('#NONE#') != -1:
+            elif '#NONE#' in result:
                 #########
                 # WebQA #
                 #########
                 ans = crawl.search(message)
-                if ans != '':
+                if ans:
                     return ans
                 else:
                     ###############
@@ -86,14 +86,5 @@ class ChatBot:
                     ###############
                     ans = self.humbot.generate_response(message)
                     return ans
-            # 学习模式
-            elif result.find('#LEARN#') != -1:
-                question = result[8:]
-                answer = message
-                self.save(question, answer)
-                return self.mybot.respond('已学习')
-            # MAY BE BUG
             else:
                 return self.mybot.respond('无答案')
-            # except:
-            #     return self.mybot.respond('无答案')

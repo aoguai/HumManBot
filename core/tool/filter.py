@@ -131,7 +131,7 @@ if __name__ == "__main__":
     # gfw = NaiveFilter()
     gfw = BSFilter()
     # gfw = DFAFilter()
-    gfw.parse("sensitive.txt")
+    gfw.parse("../resources/sensitive.txt")
     import time
 
     t = time.time()
