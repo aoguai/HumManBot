@@ -157,7 +157,7 @@ class Kernel:
         """重置大脑到其初始状态。 这实质上相当于：
             del(kern)
             kern = aiml.Kernel()        """
-        del (self._brain)
+        del self._brain
         self.__init__()
 
     def loadBrain(self, filename):

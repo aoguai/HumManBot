@@ -65,7 +65,7 @@ class AimlHandler(ContentHandler):
         self.setDocumentLocator(self._locator)
 
     def getNumErrors(self):
-        "返回解析当前文档时发现的错误数。"
+        """返回解析当前文档时发现的错误数。"""
         return self._numParseErrors
 
     def setEncoding(self, encoding):
@@ -73,7 +73,7 @@ class AimlHandler(ContentHandler):
         self._encoding = encoding
 
     def _location(self):
-        "返回描述源文件中当前位置的字符串。"
+        """返回描述源文件中当前位置的字符串。"""
         line = self._locator.getLineNumber()
         column = self._locator.getColumnNumber()
         return "(line %d, column %d)" % (line, column)
@@ -95,7 +95,7 @@ class AimlHandler(ContentHandler):
         print("QNAME:", qname)
         print("NAME:", name)
         uri, elem = name
-        if (elem == "bot"):
+        if elem == "bot":
             print("name:", attr.getValueByQName("name"), "a'ite?")
         self.startElement(elem, attr)
         pass
@@ -257,7 +257,7 @@ class AimlHandler(ContentHandler):
                 parentAttr = self._elemStack[-1][1]
                 required, optional, canBeParent = self._validInfo[parent]
                 nonBlockStyleCondition = (
-                            parent == "condition" and not ("name" in parentAttr and "value" in parentAttr))
+                        parent == "condition" and not ("name" in parentAttr and "value" in parentAttr))
                 if not canBeParent:
                     raise AimlParserError(("Unexpected text inside <%s> element " % parent) + self._location())
                 elif parent == "random" or nonBlockStyleCondition:
@@ -436,10 +436,10 @@ class AimlHandler(ContentHandler):
                         temp = int(v)
                     except:
                         raise AimlParserError(("Bad type for \"%s\" attribute (expected integer, found \"%s\") " % (
-                        k, v)) + self._location())
+                            k, v)) + self._location())
                     if temp < 1:
                         raise AimlParserError(
-                            ("\"%s\" attribute must have non-negative value " % (k)) + self._location())
+                            ("\"%s\" attribute must have non-negative value " % k) + self._location())
 
         # 查看包含的元素是否被允许包含子元素。 如果不是，不管它是什么，这个元素都是无效的。
         try:

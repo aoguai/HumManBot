@@ -1,6 +1,6 @@
-'''
+"""
 一些通用常数, 包括 Python3/Python2 区分对待
-'''
+"""
 import sys
 
 # Package 版本

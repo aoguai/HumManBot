@@ -46,31 +46,25 @@ class ChatBot:
         # 限制字数
         if len(message) > 60:
             return self.mybot.respond('MAX')
-        elif len(message) == 0:
+        elif not message:
             return self.mybot.respond('MIN')
-
         # 过滤敏感词
         message_list = jieba.lcut(message)
-        message_new = ""
-        for i in message_list:
-            if self.gfw.filter(i, "*").count("*") == len(i):
-                message_new = message_new + self.gfw.filter(i, "*").decode()
-            else:
-                message_new = message_new + i
+        message_new = ''.join(
+            [self.gfw.filter(i, "*").decode() if self.gfw.filter(i, "*").count("*") == len(i) else i for i in
+             message_list])
         if '*' in message_new:
             return self.mybot.respond('过滤')
-
         # 结束聊天
-        if message in ('exit', 'quit'):
+        if message in {'exit', 'quit'}:
             return self.mybot.respond('再见')
+            #   exit(2)
         # 开始聊天
         else:
-            ########
-            # AIML #
-            ########
+            # AIML
             result = self.mybot.respond(''.join(message_list))
             # 匹配模式
-            if result[0] != '#':
+            if not result.startswith('#'):
                 return result
             # 搜索模式
             elif '#NONE#' in result:
@@ -81,9 +75,7 @@ class ChatBot:
                 if ans:
                     return ans
                 else:
-                    ###############
-                    # Deeplearing #
-                    ###############
+                    # Deeplearing
                     ans = self.humbot.generate_response(message)
                     return ans
             else:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 def isChinese(c):
-    '''中文Unicode码范围参考：http://www.iteye.com/topic/558050     '''
+    """中文Unicode码范围参考：http://www.iteye.com/topic/558050     """
 
     r = [
         # 标准CJK文字
