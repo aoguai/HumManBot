@@ -1,4 +1,3 @@
-import torch
 from transformers import AutoModelForCausalLM, GPT2LMHeadModel, BertTokenizerFast, BloomTokenizerFast
 from typing import Optional, List
 
@@ -66,7 +65,7 @@ class BaseLMModel:
 
         raise NotImplementedError
 
-    def generate_response(self, text: str, chat_history: Optional[List[str]] = None):
+    def generate_response(self, text: str, chat_history: Optional[List[str]] = None) -> str:
         """
         生成响应
 
@@ -74,10 +73,37 @@ class BaseLMModel:
         :type text: str
         :param chat_history: 历史记录
         :type chat_history: Optional[List[str]]
+        :param text: 输入的文本
+        :type text: str
         :return: 生成的响应
         :rtype: str
         """
-        raise NotImplementedError
+        # TODO 由于各种模型的特殊标记，如CLS、SEP等各不相同，所以想要正确的分割输入问题文本和预测答案文本很难有一个完美的解决方案，暂时先这样设计了。不兼容的可以自行修改一下。
+        if chat_history:
+            for utr in chat_history:
+                self.history.append(self.tokenizer.encode(utr, add_special_tokens=True))
+        input_ids = [self.tokenizer.cls_token_id]
+        for history_id, history_utr in enumerate(self.history[-self.max_history_len:]):
+            input_ids.extend(history_utr)
+            input_ids.append(self.tokenizer.sep_token_id)
+        input_ids = self.tokenizer(f"<s>{text}</s>", return_tensors="pt", add_special_tokens=True).input_ids.to(self.device)
+
+        outputs = self.model.generate(
+            input_ids=input_ids,
+            max_length=self.max_len,
+            do_sample=True,
+            top_p=self.top_p,
+            top_k=self.top_k,
+            temperature=self.temperature,
+            repetition_penalty=self.repetition_penalty
+        )
+        # print(self.tokenizer.decode(outputs[0], clean_up_tokenization_spaces=True)) # 有需要可以自行查看原始预测文本
+        rets = self.tokenizer.decode(outputs[0], clean_up_tokenization_spaces=True).strip().replace(" ", "").replace("<s>", "").replace("[CLS]", "")
+        if "[SEP]" in rets:
+            rets = rets.split("[SEP]")[1]
+        if "</s>" in rets:
+            rets = rets.split("</s>")[1]
+        return rets
 
 
 class GPT2LMHeadModelWrapper(BaseLMModel):
@@ -107,54 +133,6 @@ class GPT2LMHeadModelWrapper(BaseLMModel):
 
         return GPT2LMHeadModel.from_pretrained(model_path)
 
-    def generate_response(self, text: str, chat_history: Optional[List[str]] = None) -> str:
-        """
-        生成响应
-
-        :param text: 输入的文本
-        :type text: str
-        :param chat_history: 历史记录
-        :type chat_history: Optional[List[str]]
-        :return: 生成的响应
-        :rtype: str
-        """
-
-        self.model.to(self.device)
-        self.model.eval()
-        if chat_history is not None:
-            self.history = chat_history
-        text_ids = self.tokenizer.encode(text, add_special_tokens=False)
-        self.history.append(text_ids)
-        # Select appropriate history
-        if len(self.history) > self.max_history_len:
-            history = self.history[-self.max_history_len:]
-        else:
-            history = self.history
-        input_ids = [self.tokenizer.cls_token_id]
-        for history_utr in history:
-            input_ids.extend(history_utr)
-            input_ids.append(self.tokenizer.sep_token_id)
-        input_ids.extend(text_ids)
-        input_ids.append(self.tokenizer.sep_token_id)
-        input_ids = torch.tensor(input_ids).long().to(self.device).unsqueeze(0)
-        outputs = self.model.generate(
-            input_ids=input_ids,
-            max_length=self.max_len,
-            do_sample=True,
-            top_p=self.top_p,
-            top_k=self.top_k,
-            temperature=self.temperature,
-            pad_token_id=self.tokenizer.pad_token_id,
-            eos_token_id=self.tokenizer.eos_token_id,
-            repetition_penalty=self.repetition_penalty
-        )
-        generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=False)
-        num_seps = generated_text.count(self.tokenizer.sep_token)
-        if num_seps < 2:
-            raise ValueError(f"Generated text does not contain at least two [SEP] tokens.\n{generated_text}")
-        desired_text = generated_text.split(self.tokenizer.sep_token)[2].strip().replace(" ", "")
-        return desired_text
-
 
 class BloomForCausalLMWrapper(BaseLMModel):
     """
@@ -181,37 +159,3 @@ class BloomForCausalLMWrapper(BaseLMModel):
         """
 
         return AutoModelForCausalLM.from_pretrained(model_path)
-
-    def generate_response(self, text: str, chat_history: Optional[List[str]] = None) -> str:
-        """
-        生成响应
-
-        :param text: 输入的文本
-        :type text: str
-        :param chat_history: 历史记录
-        :type chat_history: Optional[List[str]]
-        :return: 生成的响应
-        :rtype: str
-        """
-
-        if chat_history:
-            for utr in chat_history:
-                self.history.append(self.tokenizer.encode(utr, add_special_tokens=False))
-        input_ids = [self.tokenizer.cls_token_id]
-        for history_id, history_utr in enumerate(self.history[-self.max_history_len:]):
-            input_ids.extend(history_utr)
-            input_ids.append(self.tokenizer.sep_token_id)
-        input_ids = self.tokenizer(text, return_tensors="pt").input_ids.to(self.device)
-        outputs = self.model.generate(
-            input_ids=input_ids,
-            max_length=self.max_len,
-            do_sample=True,
-            top_p=self.top_p,
-            top_k=self.top_k,
-            temperature=self.temperature,
-            pad_token_id=self.tokenizer.pad_token_id,
-            eos_token_id=self.tokenizer.eos_token_id,
-            repetition_penalty=self.repetition_penalty
-        )
-        rets = self.tokenizer.batch_decode(outputs)
-        return rets[0].strip().replace(text, "").replace('</s>', "")
