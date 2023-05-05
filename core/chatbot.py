@@ -15,8 +15,8 @@ class ChatBot:
     基于 GPT2 或 Bloom 等模型 和 WebQA 的智能对话模型
     """
 
-    def __init__(self, model_type="gpt2",
-                 config_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.cfg')):
+    def __init__(self, model_type: str = "gpt2",
+                 config_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.cfg')):
         config = configparser.ConfigParser()
         config.read(config_file)
         """
@@ -29,11 +29,15 @@ class ChatBot:
 
         self.load_file = config.get('Resource', 'load_file')  # AIML内核指定的文件路径
         self.sensitive_file = config.get('Resource', 'sensitive_file')  # 敏感词库路径
-        self.gpt2_tokenizer_path = config.get('Resource', 'gpt2_tokenizer_path')  # GPT2 tokenizer路径
-        self.gpt2_model_path = config.get('Resource', 'gpt2_model_path')  # GPT2模型路径
-        self.bloom_tokenizer_path = config.get('Resource', 'bloom_tokenizer_path')  # bloom tokenizer路径
-        self.bloom_model_path = config.get('Resource', 'bloom_model_path')  # bloom模型路径
-
+        self.model_type = model_type  # 模型类型
+        if self.model_type =="gpt2":
+            self.tokenizer_path = config.get('Resource', 'gpt2_tokenizer_path')  # GPT2 tokenizer路径
+            self.model_path = config.get('Resource', 'gpt2_model_path')  # GPT2模型路径
+        elif self.model_type == "bloom":
+            self.tokenizer_path = config.get('Resource', 'bloom_tokenizer_path')  # bloom tokenizer路径
+            self.model_path = config.get('Resource', 'bloom_model_path')  # bloom模型路径
+        else:
+            raise ValueError(f"Unknown model type: {self.model_type}")
         self.max_len = int(config.get('ModelConf', 'max_len'))  # 字符串最长的长度
         self.max_history_len = int(config.get('ModelConf', 'max_history_len'))  # 记录的最大历史长度
         self.top_k = int(config.get('ModelConf', 'top_k'))  # 从前k个概率最高的词中随机选择
@@ -58,24 +62,6 @@ class ChatBot:
         self.template = '<aiml version="1.0" encoding="UTF-8">\n{rule}\n</aiml>'
         self.category_template = '<category><pattern>{pattern}</pattern><template>{answer}</template></category>'
 
-        # 初始化HumManBot
-        if model_type == 'gpt2':
-            self.humbot = HumManBot(model_type=model_type, model_path=self.gpt2_model_path,
-                                    tokenizer_path=self.gpt2_tokenizer_path if len(
-                                        self.gpt2_tokenizer_path) > 0 else self.gpt2_model_path, device=self.device,
-                                    max_len=self.max_len, max_history_len=self.max_history_len, top_k=self.top_k,
-                                    top_p=self.top_p,
-                                    temperature=self.temperature, repetition_penalty=self.repetition_penalty)
-        elif model_type == 'bloom':
-            self.humbot = HumManBot(model_type=model_type, model_path=self.bloom_model_path,
-                                    tokenizer_path=self.bloom_tokenizer_path if len(
-                                        self.bloom_tokenizer_path) > 0 else self.bloom_model_path, device=self.device,
-                                    max_len=self.max_len, max_history_len=self.max_history_len, top_k=self.top_k,
-                                    top_p=self.top_p,
-                                    temperature=self.temperature, repetition_penalty=self.repetition_penalty)
-        else:
-            raise ValueError(f"Unknown model type: {model_type}")
-
     def response(self, message: str) -> str:
         """
         ChatBot 回复函数，接收用户输入信息并生成相应的回复
@@ -84,7 +70,6 @@ class ChatBot:
         :return: ChatBot 生成的回复
         :rtype: str
         """
-
         # 限制字数
         if len(message) > 60:
             return self.mybot.respond('MAX')
@@ -100,23 +85,38 @@ class ChatBot:
         # 结束聊天
         if message in {'exit', 'quit'}:
             return self.mybot.respond('再见')
-            #   exit(2)
-        # 开始聊天
-        else:
-            # AIML
-            result = self.mybot.respond(''.join(message_list))
-            # 匹配模式
-            if not result.startswith('#'):
-                return result
-            # 搜索模式
-            elif '#NONE#' in result:
-                # WebQA
-                ans = crawl.search(message)
-                if ans:
-                    return ans
-                else:
-                    # Deeplearing
-                    ans = self.humbot.generate_response(message)
-                    return ans
+        # AIML和WebQA
+        result = self.mybot.respond(''.join(message_list))
+        if not result.startswith('#'):  # AIML模式
+            return result
+        elif '#NONE#' in result:  # 搜索模式
+            ans = crawl.search(message)
+            if ans:
+                return ans
             else:
-                return self.mybot.respond('无答案')
+                return self.generate_response(message)
+        else:  # 无答案
+            return self.mybot.respond('无答案')
+
+    def generate_response(self, message: str) -> str:
+        """
+        使用HumManBot生成回复
+        :param message: 用户输入信息
+        :type message: str
+        :return: ChatBot 生成的回复
+        :rtype: str
+        """
+        if not hasattr(self, 'humbot'):
+            # 初始化HumManBot
+            self.humbot = HumManBot(model_type=self.model_type, model_path=self.model_path,
+                                    tokenizer_path=self.tokenizer_path if len(
+                                        self.tokenizer_path) > 0 else self.model_path,
+                                    device=self.device,
+                                    max_len=self.max_len, max_history_len=self.max_history_len,
+                                    top_k=self.top_k,
+                                    top_p=self.top_p,
+                                    temperature=self.temperature,
+                                    repetition_penalty=self.repetition_penalty)
+        ans = self.humbot.generate_response(message)
+        return ans
+

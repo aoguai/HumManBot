@@ -73,8 +73,6 @@ class BaseLMModel:
         :type text: str
         :param chat_history: 历史记录
         :type chat_history: Optional[List[str]]
-        :param text: 输入的文本
-        :type text: str
         :return: 生成的响应
         :rtype: str
         """
