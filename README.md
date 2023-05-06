@@ -1,7 +1,7 @@
 # HumManBot
-兼容 GPT2、Bloom 模型、人工智能标记语言 (AIML) 和任务型对话系统 (Task) 的深度中文智能对话机器人框架
+兼容 GPT2、Bloom 等 Pytorch 框架下的语言模型、人工智能标记语言 (AIML) 和任务型对话系统 (Task) 的深度中文智能对话机器人框架
 
-A deep Chinese intelligent dialogue robot framework that is compatible with GPT2, Bloom model, Artificial Intelligence Markup Language (AIML), and Task-oriented Dialogue System.
+A deep Chinese intelligent conversational robot framework that supports language models under PyTorch frameworks such as GPT2 and Bloom, as well as artificial intelligence markup language (AIML) and task-oriented dialogue systems (Task).
 
 ## 源码与介绍
 本人开发运行环境：
@@ -11,10 +11,10 @@ python==3.8 torch==1.13.1+cu117 transformers==4.26.1
 ### 实现功能
 + 知识库匹配（AIML）回答问题
 + 任务型对话系统(Task)
-+ **利用 GPT2、Bloom 等模型 完成的闲聊系统回答问题**
++ **利用 GPT2、Bloom 等 Pytorch 框架下的语言模型 完成的闲聊系统回答问题**
 
 ### 特点
-+ **支持载入 GPT2、Bloom 等模型进行预测回答**
++ **支持载入 GPT2、Bloom 等 Pytorch 框架下的语言模型进行预测回答**
 + AIML功能采用[py3Aiml_Chinese](https://github.com/yaleimeng/py3Aiml_Chinese),可正确解析带中文pattern和模板的aiml文件
 + AIML知识库更多（共35个）
 + [敏感词库](https://github.com/observerss/textfilter)更广（共1.5W个），同时敏感词判断更合理
@@ -49,7 +49,8 @@ chatbot.py：
     >任务型对话系统(Task)功能函数建议放在**search.py**中<br/>
     >关键词逻辑判断建议写在**crawl.py**文件中<br/>
     >同时你可要单独写一个功能文件调用，例如给出的例子**weather.py**用于取天气<br/>
-4. GPT2、Bloom 模型 进行答案预测<br/>
+4. 使用 GPT2、Bloom 等 Pytorch 框架下的语言模型 进行答案预测<br/>
+    
     如果步骤三匹配不到回答，进行 GPT2、Bloom 模型 生成闲聊回答答案
 
     模型相关教程请移步 [WIKI](https://github.com/aoguai/HumManBot/wiki)
