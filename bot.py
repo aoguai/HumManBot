@@ -1,7 +1,7 @@
 from core.chatbot import ChatBot
 
 if __name__ == '__main__':
-    bot = ChatBot(model_type="bloom")
+    bot = ChatBot(tokenizer_type="bert")
     while True:
         message = input('ME > ')
         re_text = bot.response(message)

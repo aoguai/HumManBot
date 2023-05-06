@@ -15,29 +15,27 @@ class ChatBot:
     基于 GPT2 或 Bloom 等模型 和 WebQA 的智能对话模型
     """
 
-    def __init__(self, model_type: str = "gpt2",
+    def __init__(self, tokenizer_type: str = "auto",
                  config_file: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.cfg')):
         config = configparser.ConfigParser()
         config.read(config_file)
         """
         初始化 ChatBot 类
-        :param model_type: 模型类型，gpt2 或 bloom
-        :type model_type: str
+        :param Tokenizer_type: 分词器类型，可以是'bert'或'auto'
+        :type Tokenizer_type: str
         :param config_file: 配置文件路径，默认为当前目录下的 config.cfg
         :type config_file: str
         """
 
         self.load_file = config.get('Resource', 'load_file')  # AIML内核指定的文件路径
         self.sensitive_file = config.get('Resource', 'sensitive_file')  # 敏感词库路径
-        self.model_type = model_type  # 模型类型
-        if self.model_type =="gpt2":
-            self.tokenizer_path = config.get('Resource', 'gpt2_tokenizer_path')  # GPT2 tokenizer路径
-            self.model_path = config.get('Resource', 'gpt2_model_path')  # GPT2模型路径
-        elif self.model_type == "bloom":
-            self.tokenizer_path = config.get('Resource', 'bloom_tokenizer_path')  # bloom tokenizer路径
-            self.model_path = config.get('Resource', 'bloom_model_path')  # bloom模型路径
+        self.tokenizer_type = tokenizer_type  # 模型类型
+        if self.tokenizer_type in ["bert", "auto"]:
+            self.tokenizer_path = config.get('Resource', 'tokenizer_path')  # tokenizer路径
+            self.model_path = config.get('Resource', 'model_path')  # 模型路径
         else:
-            raise ValueError(f"Unknown model type: {self.model_type}")
+            raise ValueError(f"Unknown model type: {self.tokenizer_type}")
+
         self.max_len = int(config.get('ModelConf', 'max_len'))  # 字符串最长的长度
         self.max_history_len = int(config.get('ModelConf', 'max_history_len'))  # 记录的最大历史长度
         self.top_k = int(config.get('ModelConf', 'top_k'))  # 从前k个概率最高的词中随机选择
@@ -108,7 +106,7 @@ class ChatBot:
         """
         if not hasattr(self, 'humbot'):
             # 初始化HumManBot
-            self.humbot = HumManBot(model_type=self.model_type, model_path=self.model_path,
+            self.humbot = HumManBot(tokenizer_type=self.tokenizer_type, model_path=self.model_path,
                                     tokenizer_path=self.tokenizer_path if len(
                                         self.tokenizer_path) > 0 else self.model_path,
                                     device=self.device,
@@ -119,4 +117,3 @@ class ChatBot:
                                     repetition_penalty=self.repetition_penalty)
         ans = self.humbot.generate_response(message)
         return ans
-

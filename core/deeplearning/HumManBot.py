@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from .BaseLMModel import GPT2LMHeadModelWrapper, BloomForCausalLMWrapper
+from .BaseLMModel import BERTLMHeadModelWrapper, AutoForCausalLMWrapper
 
 
 class HumManBot:
@@ -8,13 +8,13 @@ class HumManBot:
     HumManBot类用于生成聊天回复，可以基于GPT2或Bloom等模型进行聊天回复的生成
     """
 
-    def __init__(self, model_type: str, model_path: str, tokenizer_path: str, device: str,
+    def __init__(self, tokenizer_type: str, model_path: str, tokenizer_path: str, device: str,
         max_len: int, max_history_len: int, top_k: int, top_p: float,
         temperature: float, repetition_penalty: float):
         """
         初始化函数
-        :param model_type: 模型类型，可以是'gpt2'或'bloom'
-        :type model_type: str
+        :param tokenizer_type: 分词器类型，可以是'bert'或'auto'
+        :type tokenizer_type: str
         :param model_path: 模型路径
         :type model_path: str
         :param tokenizer_path: 分词器路径
@@ -35,7 +35,7 @@ class HumManBot:
         :type repetition_penalty: float
         """
 
-        self.model_type = model_type
+        self.tokenizer_type = tokenizer_type
         self.model_path = model_path
         self.tokenizer_path = tokenizer_path
         self.device = device
@@ -45,20 +45,20 @@ class HumManBot:
         self.top_p = top_p
         self.temperature = temperature
         self.repetition_penalty = repetition_penalty
-        if model_type == 'gpt2':
-            self.model = GPT2LMHeadModelWrapper(model_path=self.model_path, tokenizer_path=self.tokenizer_path,
+        if tokenizer_type == 'bert':
+            self.model = BERTLMHeadModelWrapper(model_path=self.model_path, tokenizer_path=self.tokenizer_path,
                                                 device=self.device, max_len=self.max_len,
                                                 max_history_len=self.max_history_len, top_k=self.top_k,
                                                 top_p=self.top_p, temperature=self.temperature,
                                                 repetition_penalty=self.repetition_penalty)
-        elif model_type == 'bloom':
-            self.model = BloomForCausalLMWrapper(model_path=self.model_path, tokenizer_path=self.tokenizer_path,
+        elif tokenizer_type == 'auto':
+            self.model = AutoForCausalLMWrapper(model_path=self.model_path, tokenizer_path=self.tokenizer_path,
                                                  device=self.device, max_len=self.max_len,
                                                  max_history_len=self.max_history_len, top_k=self.top_k,
                                                  top_p=self.top_p, temperature=self.temperature,
                                                  repetition_penalty=self.repetition_penalty)
         else:
-            raise ValueError(f"Unknown model type: {model_type}")
+            raise ValueError(f"Unknown model type: {tokenizer_type}")
 
     def generate_response(self, text: str, chat_history: Optional[List[str]] = None) -> str:
         """

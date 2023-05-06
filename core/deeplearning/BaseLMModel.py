@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, GPT2LMHeadModel, BertTokenizerFast, BloomTokenizerFast
+from transformers import AutoModelForCausalLM, BertTokenizerFast, AutoTokenizer
 from typing import Optional, List
 
 
@@ -104,20 +104,19 @@ class BaseLMModel:
         return rets
 
 
-class GPT2LMHeadModelWrapper(BaseLMModel):
+class BERTLMHeadModelWrapper(BaseLMModel):
     """
-    GPT2语言模型类，继承自基础语言模型类。
+    BERT 模型类，继承自基础语言模型类。使用 BertTokenizerFast 作为分词器。
     """
 
     def _init_tokenizer(self, tokenizer_path: str):
         """
-        初始化Bert分词器
+        初始化分词器
 
         :param tokenizer_path: 分词器路径
         :type tokenizer_path: str
         :return: 分词器
         """
-
         return BertTokenizerFast.from_pretrained(tokenizer_path, padding_side='left')
 
     def _init_model(self, model_path: str):
@@ -129,23 +128,23 @@ class GPT2LMHeadModelWrapper(BaseLMModel):
         :return: 模型
         """
 
-        return GPT2LMHeadModel.from_pretrained(model_path)
+        return AutoModelForCausalLM.from_pretrained(model_path)
 
 
-class BloomForCausalLMWrapper(BaseLMModel):
+class AutoForCausalLMWrapper(BaseLMModel):
     """
-    Bloom语言模型类，继承自基础语言模型类。
+    Auto模型类，继承自基础语言模型类。使用 AutoTokenizer 作为分词器
     """
 
     def _init_tokenizer(self, tokenizer_path: str):
         """
-        初始化Bert分词器
+        初始化分词器
 
         :param tokenizer_path: 分词器路径
         :type tokenizer_path: str
         :return: 分词器
         """
-        return BloomTokenizerFast.from_pretrained(tokenizer_path)
+        return AutoTokenizer.from_pretrained(tokenizer_path)
 
     def _init_model(self, model_path: str):
         """
