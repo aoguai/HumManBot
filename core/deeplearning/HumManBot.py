@@ -9,8 +9,8 @@ class HumManBot:
     """
 
     def __init__(self, tokenizer_type: str, model_path: str, tokenizer_path: str, device: str,
-        max_len: int, max_history_len: int, top_k: int, top_p: float,
-        temperature: float, repetition_penalty: float):
+                 max_len: int, max_history_len: int, top_k: int, top_p: float,
+                 temperature: float, repetition_penalty: float):
         """
         初始化函数
         :param tokenizer_type: 分词器类型，可以是'bert'或'auto'
@@ -53,10 +53,10 @@ class HumManBot:
                                                 repetition_penalty=self.repetition_penalty)
         elif tokenizer_type == 'auto':
             self.model = AutoForCausalLMWrapper(model_path=self.model_path, tokenizer_path=self.tokenizer_path,
-                                                 device=self.device, max_len=self.max_len,
-                                                 max_history_len=self.max_history_len, top_k=self.top_k,
-                                                 top_p=self.top_p, temperature=self.temperature,
-                                                 repetition_penalty=self.repetition_penalty)
+                                                device=self.device, max_len=self.max_len,
+                                                max_history_len=self.max_history_len, top_k=self.top_k,
+                                                top_p=self.top_p, temperature=self.temperature,
+                                                repetition_penalty=self.repetition_penalty)
         else:
             raise ValueError(f"Unknown model type: {tokenizer_type}")
 

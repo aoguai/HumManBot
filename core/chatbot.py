@@ -1,5 +1,6 @@
 import configparser
 import os
+from typing import Optional, List
 
 import jieba
 from .crawler import crawl
@@ -60,11 +61,13 @@ class ChatBot:
         self.template = '<aiml version="1.0" encoding="UTF-8">\n{rule}\n</aiml>'
         self.category_template = '<category><pattern>{pattern}</pattern><template>{answer}</template></category>'
 
-    def response(self, message: str) -> str:
+    def response(self, message: str, chat_history: Optional[List[str]] = None) -> str:
         """
         ChatBot 回复函数，接收用户输入信息并生成相应的回复
         :param message: 用户输入信息
         :type message: str
+        :type chat_history: Optional[List[str]]
+        :return: ChatBot 生成的回复
         :return: ChatBot 生成的回复
         :rtype: str
         """
@@ -92,15 +95,17 @@ class ChatBot:
             if ans:
                 return ans
             else:
-                return self.generate_response(message)
+                return self.generate_response(message, chat_history)
         else:  # 无答案
             return self.mybot.respond('无答案')
 
-    def generate_response(self, message: str) -> str:
+    def generate_response(self, message: str, chat_history: Optional[List[str]] = None) -> str:
         """
         使用HumManBot生成回复
         :param message: 用户输入信息
         :type message: str
+        :param chat_history: 聊天历史记录
+        :type chat_history: Optional[List[str]]
         :return: ChatBot 生成的回复
         :rtype: str
         """
@@ -115,5 +120,5 @@ class ChatBot:
                                     top_p=self.top_p,
                                     temperature=self.temperature,
                                     repetition_penalty=self.repetition_penalty)
-        ans = self.humbot.generate_response(message)
+        ans = self.humbot.generate_response(message, chat_history)
         return ans
